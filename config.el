@@ -18,30 +18,30 @@
       doom-variable-pitch-font (font-spec :family "JetBrainsMono Nerd Font" :size 13)
       doom-big-font (font-spec :family "JetBrainsMono Nerd Font" :size 20))
 
-;; ── Theme — oxocarbon palette on doom-one base ──────────────────────────────
-(setq doom-theme 'doom-one)
+;; ── Theme — warm paper light, IBM-ish blues ─────────────────────────────────
+(setq doom-theme 'doom-one-light)
 
 (add-hook! 'doom-load-theme-hook
   (custom-set-faces!
-    '(default                  :background "#262626" :foreground "#f2f4f8")
-    '(fringe                   :background "#262626")
-    '(hl-line                  :background "#333333")
-    '(region                   :background "#444444")
-    '(cursor                   :background "#42be65")
-    '(vertical-border          :foreground "#444444")
-    '(line-number              :background "#262626" :foreground "#6e6e6e")
-    '(line-number-current-line :background "#262626" :foreground "#f2f4f8" :weight bold)
-    '(font-lock-keyword-face       :foreground "#4589ff" :weight bold)
-    '(font-lock-function-name-face :foreground "#82cfff" :weight bold)
-    '(font-lock-type-face          :foreground "#3ddbd9")
-    '(font-lock-variable-name-face :foreground "#f2f4f8" :weight normal)
-    '(font-lock-string-face        :foreground "#ff4444")
-    '(font-lock-comment-face       :foreground "#f2f4f8" :weight normal :slant normal)
-    '(font-lock-doc-face           :foreground "#f2f4f8" :weight normal :slant normal)
-    '(font-lock-constant-face      :foreground "#ff7eb6")
-    '(font-lock-builtin-face       :foreground "#82cfff")
-    '(mode-line                :background "#333333" :foreground "#f2f4f8")
-    '(mode-line-inactive       :background "#2a2a2a" :foreground "#6e6e6e")))
+    '(default                  :background "#faf9f5" :foreground "#1a1a1a")
+    '(fringe                   :background "#faf9f5")
+    '(hl-line                  :background "#f0eee6")
+    '(region                   :background "#dde6f3")
+    '(cursor                   :background "#3a7dd8")
+    '(vertical-border          :foreground "#e3e0d6")
+    '(line-number              :background "#faf9f5" :foreground "#b8b5a9")
+    '(line-number-current-line :background "#faf9f5" :foreground "#1a1a1a" :weight bold)
+    '(font-lock-keyword-face       :foreground "#1f6feb" :weight bold)
+    '(font-lock-function-name-face :foreground "#3a7dd8" :weight bold)
+    '(font-lock-type-face          :foreground "#0e8f8f")
+    '(font-lock-variable-name-face :foreground "#1a1a1a" :weight normal)
+    '(font-lock-string-face        :foreground "#c92a2a")
+    '(font-lock-comment-face       :foreground "#1a1a1a" :weight normal :slant normal)
+    '(font-lock-doc-face           :foreground "#1a1a1a" :weight normal :slant normal)
+    '(font-lock-constant-face      :foreground "#bd4d8a")
+    '(font-lock-builtin-face       :foreground "#3a7dd8")
+    '(mode-line                :background "#efece2" :foreground "#1a1a1a")
+    '(mode-line-inactive       :background "#f4f2ea" :foreground "#9a978c")))
 
 ;; ── Line numbers ─────────────────────────────────────────────────────────────
 (setq display-line-numbers-type 'relative)
@@ -140,8 +140,8 @@
         highlight-indent-guides-character ?\│
         highlight-indent-guides-responsive 'top)
   (custom-set-faces!
-    '(highlight-indent-guides-character-face     :foreground "#3a3a3a")
-    '(highlight-indent-guides-top-character-face :foreground "#6e6e6e")))
+    '(highlight-indent-guides-character-face     :foreground "#e3e0d6")
+    '(highlight-indent-guides-top-character-face :foreground "#b8b5a9")))
 
 ;; ── Embark — contextual actions ───────────────────────────────────────────────
 (after! embark
@@ -169,26 +169,26 @@
 ;; ── Tree-sitter faces (Rust, C++) ────────────────────────────────────────────
 (add-hook! 'doom-load-theme-hook
   (custom-set-faces!
-    '(tree-sitter-hl-face:keyword          :foreground "#4589ff" :weight bold)
-    '(tree-sitter-hl-face:function         :foreground "#82cfff" :weight bold)
-    '(tree-sitter-hl-face:function.call    :foreground "#82cfff")
-    '(tree-sitter-hl-face:function.macro   :foreground "#82cfff" :weight bold)
-    '(tree-sitter-hl-face:method           :foreground "#82cfff" :weight bold)
-    '(tree-sitter-hl-face:method.call      :foreground "#82cfff")
-    '(tree-sitter-hl-face:type             :foreground "#3ddbd9")
-    '(tree-sitter-hl-face:type.builtin     :foreground "#3ddbd9")
-    '(tree-sitter-hl-face:string           :foreground "#ff4444")
-    '(tree-sitter-hl-face:string.special   :foreground "#ff4444")
-    '(tree-sitter-hl-face:comment          :foreground "#f2f4f8" :weight normal :slant normal)
-    '(tree-sitter-hl-face:doc              :foreground "#f2f4f8" :weight normal :slant normal)
-    '(tree-sitter-hl-face:constant         :foreground "#ff7eb6")
-    '(tree-sitter-hl-face:constant.builtin :foreground "#ff7eb6")
-    '(tree-sitter-hl-face:variable         :foreground "#f2f4f8" :weight normal)
-    '(tree-sitter-hl-face:variable.builtin :foreground "#f2f4f8")
-    '(tree-sitter-hl-face:property         :foreground "#f2f4f8")
-    '(tree-sitter-hl-face:operator         :foreground "#c6c6c6")
-    '(tree-sitter-hl-face:punctuation      :foreground "#c6c6c6")
-    '(tree-sitter-hl-face:number           :foreground "#ff7eb6")))
+    '(tree-sitter-hl-face:keyword          :foreground "#1f6feb" :weight bold)
+    '(tree-sitter-hl-face:function         :foreground "#3a7dd8" :weight bold)
+    '(tree-sitter-hl-face:function.call    :foreground "#3a7dd8")
+    '(tree-sitter-hl-face:function.macro   :foreground "#3a7dd8" :weight bold)
+    '(tree-sitter-hl-face:method           :foreground "#3a7dd8" :weight bold)
+    '(tree-sitter-hl-face:method.call      :foreground "#3a7dd8")
+    '(tree-sitter-hl-face:type             :foreground "#0e8f8f")
+    '(tree-sitter-hl-face:type.builtin     :foreground "#0e8f8f")
+    '(tree-sitter-hl-face:string           :foreground "#c92a2a")
+    '(tree-sitter-hl-face:string.special   :foreground "#c92a2a")
+    '(tree-sitter-hl-face:comment          :foreground "#1a1a1a" :weight normal :slant normal)
+    '(tree-sitter-hl-face:doc              :foreground "#1a1a1a" :weight normal :slant normal)
+    '(tree-sitter-hl-face:constant         :foreground "#bd4d8a")
+    '(tree-sitter-hl-face:constant.builtin :foreground "#bd4d8a")
+    '(tree-sitter-hl-face:variable         :foreground "#1a1a1a" :weight normal)
+    '(tree-sitter-hl-face:variable.builtin :foreground "#1a1a1a")
+    '(tree-sitter-hl-face:property         :foreground "#1a1a1a")
+    '(tree-sitter-hl-face:operator         :foreground "#6b6b6b")
+    '(tree-sitter-hl-face:punctuation      :foreground "#6b6b6b")
+    '(tree-sitter-hl-face:number           :foreground "#bd4d8a")))
 
 ;; ── Keybindings ──────────────────────────────────────────────────────────────
 (map! :leader
