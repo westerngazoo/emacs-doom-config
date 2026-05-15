@@ -8,37 +8,40 @@
 (defvar my/macp   (eq system-type 'darwin))
 (defvar my/linuxp (eq system-type 'gnu/linux))
 (defvar my/wslp   (and my/linuxp
-                       (string-match-p "WSL\\|microsoft"
-                         (shell-command-to-string "uname -r"))))
+                       (file-exists-p "/proc/sys/fs/binfmt_misc/WSLInterop")))
 
 ;; ── Font ────────────────────────────────────────────────────────────────────
 (setq doom-font (font-spec
                  :family (if my/macp "JetBrainsMono Nerd Font"
                            "JetBrainsMono Nerd Font Mono")
-                 :size (if my/macp 14 13))
+                 :size (if my/macp 15 14))
       doom-variable-pitch-font (font-spec :family "JetBrainsMono Nerd Font" :size 13)
       doom-big-font (font-spec :family "JetBrainsMono Nerd Font" :size 20))
 
-;; ── Theme — cyberpunk dark ───────────────────────────────────────────────────
-(setq doom-theme 'doom-city-lights)
+;; ── Theme — oxocarbon palette on doom-one base ──────────────────────────────
+(setq doom-theme 'doom-one)
 
-;; Override highlights for cyberpunk feel after theme loads
 (add-hook! 'doom-load-theme-hook
   (custom-set-faces!
-    ;; Teal/cyan keywords like the image
-    '(font-lock-keyword-face       :foreground "#5DE4C7" :weight bold)
-    '(font-lock-function-name-face :foreground "#FFFAC2" :weight bold)
-    '(font-lock-string-face        :foreground "#ADD7FF")
-    '(font-lock-comment-face       :foreground "#3B5268" :slant italic)
-    '(font-lock-type-face          :foreground "#5DE4C7")
-    '(font-lock-constant-face      :foreground "#E4F0FB")
-    ;; Amber line numbers like the terminal in the image
-    '(line-number              :foreground "#3B5268")
-    '(line-number-current-line :foreground "#FFCC00" :weight bold)
-    ;; Git gutter colors
-    '(vc-gutter:added    :foreground "#5FB770")
-    '(vc-gutter:modified :foreground "#FF9E3B")
-    '(vc-gutter:removed  :foreground "#FF5C57")))
+    '(default                  :background "#262626" :foreground "#f2f4f8")
+    '(fringe                   :background "#262626")
+    '(hl-line                  :background "#333333")
+    '(region                   :background "#444444")
+    '(cursor                   :background "#42be65")
+    '(vertical-border          :foreground "#444444")
+    '(line-number              :background "#262626" :foreground "#6e6e6e")
+    '(line-number-current-line :background "#262626" :foreground "#f2f4f8" :weight bold)
+    '(font-lock-keyword-face       :foreground "#4589ff" :weight bold)
+    '(font-lock-function-name-face :foreground "#82cfff" :weight bold)
+    '(font-lock-type-face          :foreground "#3ddbd9")
+    '(font-lock-variable-name-face :foreground "#f2f4f8" :weight normal)
+    '(font-lock-string-face        :foreground "#ff4444")
+    '(font-lock-comment-face       :foreground "#f2f4f8" :weight normal :slant normal)
+    '(font-lock-doc-face           :foreground "#f2f4f8" :weight normal :slant normal)
+    '(font-lock-constant-face      :foreground "#ff7eb6")
+    '(font-lock-builtin-face       :foreground "#82cfff")
+    '(mode-line                :background "#333333" :foreground "#f2f4f8")
+    '(mode-line-inactive       :background "#2a2a2a" :foreground "#6e6e6e")))
 
 ;; ── Line numbers ─────────────────────────────────────────────────────────────
 (setq display-line-numbers-type 'relative)
@@ -61,7 +64,7 @@
         treemacs-git-mode            'extended))
 
 (map! :leader
-      :desc "File tree"    "e"  #'treemacs
+      :desc "File tree"    "e"  #'+treemacs/toggle
       :desc "Claude Code"  "cc" (cmd! (vterm) (vterm-send-string "claude\n")))
 
 ;; ── Modeline ─────────────────────────────────────────────────────────────────
@@ -117,6 +120,30 @@
 
 ;; ── Org ───────────────────────────────────────────────────────────────────────
 (setq org-directory "~/org/")
+
+;; ── Tree-sitter faces (Rust, C++) ────────────────────────────────────────────
+(add-hook! 'doom-load-theme-hook
+  (custom-set-faces!
+    '(tree-sitter-hl-face:keyword          :foreground "#4589ff" :weight bold)
+    '(tree-sitter-hl-face:function         :foreground "#82cfff" :weight bold)
+    '(tree-sitter-hl-face:function.call    :foreground "#82cfff")
+    '(tree-sitter-hl-face:function.macro   :foreground "#82cfff" :weight bold)
+    '(tree-sitter-hl-face:method           :foreground "#82cfff" :weight bold)
+    '(tree-sitter-hl-face:method.call      :foreground "#82cfff")
+    '(tree-sitter-hl-face:type             :foreground "#3ddbd9")
+    '(tree-sitter-hl-face:type.builtin     :foreground "#3ddbd9")
+    '(tree-sitter-hl-face:string           :foreground "#ff4444")
+    '(tree-sitter-hl-face:string.special   :foreground "#ff4444")
+    '(tree-sitter-hl-face:comment          :foreground "#f2f4f8" :weight normal :slant normal)
+    '(tree-sitter-hl-face:doc              :foreground "#f2f4f8" :weight normal :slant normal)
+    '(tree-sitter-hl-face:constant         :foreground "#ff7eb6")
+    '(tree-sitter-hl-face:constant.builtin :foreground "#ff7eb6")
+    '(tree-sitter-hl-face:variable         :foreground "#f2f4f8" :weight normal)
+    '(tree-sitter-hl-face:variable.builtin :foreground "#f2f4f8")
+    '(tree-sitter-hl-face:property         :foreground "#f2f4f8")
+    '(tree-sitter-hl-face:operator         :foreground "#c6c6c6")
+    '(tree-sitter-hl-face:punctuation      :foreground "#c6c6c6")
+    '(tree-sitter-hl-face:number           :foreground "#ff7eb6")))
 
 ;; ── Keybindings ──────────────────────────────────────────────────────────────
 (map! :leader
