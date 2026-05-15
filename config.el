@@ -158,6 +158,11 @@
       :desc "Roam insert"  "ni" #'org-roam-node-insert
       :desc "Roam buffer"  "nb" #'org-roam-buffer-toggle)
 
+;; ── Projectile project discovery ────────────────────────────────────────────
+(after! projectile
+  (setq projectile-project-search-path '(("~/projects/" . 1))
+        projectile-auto-discover t))
+
 ;; ── Org ───────────────────────────────────────────────────────────────────────
 (setq org-directory "~/org/")
 
