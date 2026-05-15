@@ -20,3 +20,13 @@
 
 ;; Better terminal colors
 (package! xterm-color)
+
+;; GitHub PRs and issues inside Magit
+(package! forge)
+
+;; Contextual actions (like a right-click menu)
+(package! embark)
+(package! embark-consult)
+
+;; Colored brackets by depth
+(package! rainbow-delimiters)

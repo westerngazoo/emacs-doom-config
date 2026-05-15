@@ -118,6 +118,46 @@
         (lambda ()
           (shell-command-to-string "powershell.exe -command 'Get-Clipboard'"))))
 
+;; ── Frame transparency ───────────────────────────────────────────────────────
+(add-to-list 'default-frame-alist '(alpha-background . 92))
+
+;; ── Dimmer — fade inactive windows ───────────────────────────────────────────
+(after! dimmer
+  (setq dimmer-fraction 0.25
+        dimmer-adjustment-mode :foreground)
+  (dimmer-mode t))
+
+;; ── Good scroll — smooth scrolling ───────────────────────────────────────────
+(after! good-scroll
+  (good-scroll-mode t))
+
+;; ── Rainbow delimiters ────────────────────────────────────────────────────────
+(add-hook! (prog-mode) #'rainbow-delimiters-mode)
+
+;; ── Indent guides ─────────────────────────────────────────────────────────────
+(after! highlight-indent-guides
+  (setq highlight-indent-guides-method 'character
+        highlight-indent-guides-character ?\│
+        highlight-indent-guides-responsive 'top)
+  (custom-set-faces!
+    '(highlight-indent-guides-character-face     :foreground "#3a3a3a")
+    '(highlight-indent-guides-top-character-face :foreground "#6e6e6e")))
+
+;; ── Embark — contextual actions ───────────────────────────────────────────────
+(after! embark
+  (setq embark-prompter #'embark-completing-read-prompter))
+(map! "C-." #'embark-act
+      "C-;" #'embark-dwim)
+
+;; ── Org-roam ──────────────────────────────────────────────────────────────────
+(setq org-roam-directory "~/org/roam/")
+(after! org-roam
+  (org-roam-db-autosync-mode))
+(map! :leader
+      :desc "Roam find"    "nr" #'org-roam-node-find
+      :desc "Roam insert"  "ni" #'org-roam-node-insert
+      :desc "Roam buffer"  "nb" #'org-roam-buffer-toggle)
+
 ;; ── Org ───────────────────────────────────────────────────────────────────────
 (setq org-directory "~/org/")
 
