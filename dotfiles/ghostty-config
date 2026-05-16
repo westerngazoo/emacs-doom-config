@@ -1,0 +1,36 @@
+macos-option-as-alt = true
+
+font-family = JetBrainsMono Nerd Font
+font-size = 13
+cursor-style = block
+cursor-style-blink = false
+window-padding-x = 12
+window-padding-y = 8
+background-opacity = 1.0
+
+background = faf9f5
+foreground = 1a1a1a
+cursor-color = 3a7dd8
+cursor-text = faf9f5
+selection-background = dde6f3
+selection-foreground = 1a1a1a
+
+palette = 0=#1a1a1a
+palette = 1=#c92a2a
+palette = 2=#1a8c3e
+palette = 3=#a86b00
+palette = 4=#1f6feb
+palette = 5=#bd4d8a
+palette = 6=#0e8f8f
+palette = 7=#d6d3c8
+palette = 8=#9a978c
+palette = 9=#e0483f
+palette = 10=#24a148
+palette = 11=#c4870a
+palette = 12=#3a7dd8
+palette = 13=#d067a0
+palette = 14=#13a3a3
+palette = 15=#faf9f5
+
+custom-shader = ~/.config/ghostty/shaders/public/shaders/cursor_smear.glsl
+custom-shader-animation = true

@@ -1,0 +1,69 @@
+add_newline = true
+
+format = """
+[╭─](#3a7dd8) $directory$git_branch$git_status$rust$python$nodejs$package$cmd_duration
+[╰─](#3a7dd8)$character"""
+
+[character]
+success_symbol = "[❯](#1f6feb)"
+error_symbol = "[❯](#c92a2a)"
+vimcmd_symbol = "[❮](#a86b00)"
+
+[directory]
+style = "bold #1f6feb"
+read_only = " 󰌾"
+read_only_style = "#c92a2a"
+truncation_length = 4
+truncation_symbol = "…/"
+format = "[ ](#c4c1b6)[$path]($style)[$read_only]($read_only_style) "
+
+[git_branch]
+symbol = " "
+style = "#a86b00"
+format = "[ ](#c4c1b6)[$symbol$branch]($style) "
+
+[git_status]
+style = "#c92a2a"
+format = "[$all_status$ahead_behind]($style) "
+conflicted = "="
+ahead = "⇡${count} "
+behind = "⇣${count} "
+diverged = "⇕⇡${ahead_count}⇣${behind_count} "
+up_to_date = ""
+untracked = "?${count} "
+stashed = "\\$${count} "
+modified = "!${count} "
+staged = "+${count} "
+renamed = "»${count} "
+deleted = "✘${count} "
+
+[rust]
+symbol = " "
+style = "#a86b00"
+format = "[ ](#c4c1b6)[$symbol($version )]($style)"
+
+[python]
+symbol = " "
+style = "#1f6feb"
+format = "[ ](#c4c1b6)[$symbol($version )]($style)"
+
+[nodejs]
+symbol = " "
+style = "#0e8f8f"
+format = "[ ](#c4c1b6)[$symbol($version )]($style)"
+
+[package]
+symbol = "󰏗 "
+style = "#bd4d8a"
+format = "[ ](#c4c1b6)[$symbol$version]($style) "
+
+[cmd_duration]
+min_time = 2000
+style = "#9a978c"
+format = "[⏱ $duration]($style) "
+
+[username]
+disabled = true
+
+[hostname]
+disabled = true

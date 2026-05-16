@@ -1,0 +1,41 @@
+# ── Editor ──────────────────────────────────────────────────────────────────
+alias e='emacs -nw'
+alias emacs='emacs -nw'
+alias codefire='emacs -nw'
+
+# ── Prompt ──────────────────────────────────────────────────────────────────
+eval "$(starship init zsh)"
+
+# ── Smart cd ────────────────────────────────────────────────────────────────
+eval "$(zoxide init zsh --cmd cd)"
+
+# ── ls → eza (Nerd Font icons + git status) ─────────────────────────────────
+alias ls='eza --icons --group-directories-first'
+alias ll='eza -l --icons --git --group-directories-first'
+alias la='eza -la --icons --git --group-directories-first'
+alias lt='eza --tree --icons --level=2'
+
+# ── cat → bat (syntax highlighting) ─────────────────────────────────────────
+alias cat='bat --style=plain --paging=never'
+alias batp='bat --style=full'   # full with line numbers + git markers
+
+# ── CLI bundle aliases ──────────────────────────────────────────────────────
+alias lg='lazygit'
+alias top='btop'
+alias md='glow -p'           # paginated markdown read; e.g. `md README.md`
+alias ff='fastfetch'         # system splash
+
+# ── Rust ────────────────────────────────────────────────────────────────────
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+
+# ── macOS-only ──────────────────────────────────────────────────────────────
+if [[ "$OSTYPE" == darwin* ]]; then
+  alias ee='open -a Emacs'
+  alias lock='pmset displaysleepnow'
+  zzz() {
+    local secs=${1:-0}
+    nohup sh -c "sleep $secs && pmset sleepnow" >/dev/null 2>&1 &
+    disown
+    echo "Sleeping in ${secs}s..."
+  }
+fi
