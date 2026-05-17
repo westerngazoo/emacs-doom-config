@@ -29,8 +29,8 @@
     '(region                   :background "#dde6f3")
     '(cursor                   :background "#3a7dd8")
     '(vertical-border          :foreground "#e3e0d6")
-    '(line-number              :background "#faf9f5" :foreground "#b8b5a9")
-    '(line-number-current-line :background "#faf9f5" :foreground "#1a1a1a" :weight bold)
+    '(line-number              :background "#faf9f5" :foreground "#9dbfe8")
+    '(line-number-current-line :background "#faf9f5" :foreground "#1f6feb" :weight bold)
     '(font-lock-keyword-face       :foreground "#1f6feb" :weight bold)
     '(font-lock-function-name-face :foreground "#3a7dd8" :weight bold)
     '(font-lock-type-face          :foreground "#0e8f8f")
@@ -41,10 +41,26 @@
     '(font-lock-constant-face      :foreground "#bd4d8a")
     '(font-lock-builtin-face       :foreground "#3a7dd8")
     '(mode-line                :background "#efece2" :foreground "#1a1a1a")
-    '(mode-line-inactive       :background "#f4f2ea" :foreground "#9a978c")))
+    '(mode-line-inactive       :background "#f4f2ea" :foreground "#9a978c")
+    ;; eww / markdown-live-preview
+    '(shr-text                 :foreground "#1a1a1a" :background "#faf9f5")
+    '(shr-h1                   :foreground "#1a1a1a" :weight bold :height 1.4)
+    '(shr-h2                   :foreground "#1a1a1a" :weight bold :height 1.2)
+    '(shr-h3                   :foreground "#1a1a1a" :weight bold :height 1.1)
+    '(shr-link                 :foreground "#1f6feb" :underline t)
+    '(shr-code                 :foreground "#c92a2a" :background "#f0eee6")
+    '(eww-form-text            :background "#f0eee6")
+    '(markdown-header-face-1   :foreground "#1a1a1a" :weight bold :height 1.4)
+    '(markdown-header-face-2   :foreground "#1a1a1a" :weight bold :height 1.2)
+    '(markdown-header-face-3   :foreground "#3a7dd8" :weight bold :height 1.1)
+    '(markdown-bold-face       :foreground "#1a1a1a" :weight bold)
+    '(markdown-code-face       :background "#f0eee6")
+    '(markdown-link-face       :foreground "#1f6feb")
+    '(markdown-url-face        :foreground "#9a978c" :underline t)))
 
 ;; ── Line numbers ─────────────────────────────────────────────────────────────
 (setq display-line-numbers-type 'relative)
+(global-display-line-numbers-mode 1)
 
 ;; ── Editor feel ──────────────────────────────────────────────────────────────
 (setq-default
@@ -198,3 +214,12 @@
       :desc "Buffers"      "fb" #'consult-buffer
       :desc "Rename tab"   "tr" #'+workspace/rename
       :desc "New tab"      "tn" #'+workspace/new)
+
+;; ── Markdown preview ─────────────────────────────────────────────────────────
+(after! markdown-mode
+  (setq markdown-split-window-direction 'right))
+(after! grip-mode
+  (setq grip-binary-path (expand-file-name "~/.local/bin/grip")))
+(map! :localleader
+      :map markdown-mode-map
+      :desc "Grip preview" "p" #'grip-mode)

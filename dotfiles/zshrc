@@ -39,3 +39,6 @@ if [[ "$OSTYPE" == darwin* ]]; then
     echo "Sleeping in ${secs}s..."
   }
 fi
+
+# Created by `pipx` on 2026-05-17 15:57:30
+export PATH="$PATH:/Users/goose/.local/bin"

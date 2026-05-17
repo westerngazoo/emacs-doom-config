@@ -30,3 +30,6 @@
 
 ;; Colored brackets by depth
 (package! rainbow-delimiters)
+
+;; Markdown preview via grip (renders like GitHub)
+(package! grip-mode)
