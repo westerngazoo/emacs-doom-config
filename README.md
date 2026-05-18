@@ -34,6 +34,24 @@ Then restart Emacs and open a new shell.
 
 ---
 
+## Quick-start — Windows (WSL, already configured)
+
+If WSL is already set up and you just need to pull the latest config:
+
+```sh
+cd ~/.config/doom && git pull && ./install.sh && ~/.config/emacs/bin/doom sync
+```
+
+If grip-mode is new (markdown preview), also run:
+
+```sh
+sudo apt install pipx -y && pipx install grip
+```
+
+Then restart Emacs. Aerospace is macOS-only and is skipped automatically by `install.sh`.
+
+---
+
 ## Fresh setup — macOS
 
 ```sh
