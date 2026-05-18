@@ -88,44 +88,85 @@ Restart the shell, then run `emacs`.
 
 ## Fresh setup — Windows / WSL
 
-Run everything inside the WSL distro (Ubuntu/Debian assumed).
+> Everything runs inside WSL (Ubuntu 22.04+ recommended). Open PowerShell as
+> Administrator and run `wsl --install` if you haven't set it up yet, then
+> reboot and launch Ubuntu from the Start menu.
+
+### Step 1 — Enable zsh
 
 ```sh
-# 1. Emacs 29+ and build deps
-sudo apt update
-sudo apt install -y emacs git build-essential cmake libtool-bin \
-                    pandoc fd-find ripgrep zoxide bat
-# Note: on Debian/Ubuntu, bat is installed as `batcat` and fd as `fdfind`.
-# The zshrc aliases assume `bat`/`fd` — symlink them:
+sudo apt update && sudo apt install -y zsh git
+chsh -s $(which zsh)   # log out and back in for this to take effect
+```
+
+### Step 2 — Emacs + build tools
+
+Emacs needs `cmake` and `libtool-bin` to compile the vterm native module (the
+terminal inside Emacs). `pandoc` powers the markdown split-preview.
+
+```sh
+sudo apt install -y emacs build-essential cmake libtool-bin pandoc \
+                    fd-find ripgrep zoxide bat pipx
+
+# Debian/Ubuntu ships bat as `batcat` and fd as `fdfind` — alias them:
 mkdir -p ~/.local/bin
 ln -sf "$(which batcat)" ~/.local/bin/bat
 ln -sf "$(which fdfind)" ~/.local/bin/fd
+```
 
-# 2. CLI tools not reliably in apt — install via their own methods
-curl -sS https://starship.rs/install.sh | sh                 # starship
-cargo install eza                                            # eza (needs Rust, see step 4)
-# lazygit, glow, btop, fastfetch: grab latest release binary from their
-# GitHub releases pages, or use your distro's backports.
+### Step 3 — Rust toolchain
 
-# 3. JetBrains Mono Nerd Font
-#    Download from https://github.com/ryanoasis/nerd-fonts/releases
-#    (JetBrainsMono.zip), unzip into ~/.local/share/fonts, then: fc-cache -f
+Needed for the Rust LSP (rust-analyzer) and for building `eza` (better `ls`).
 
-# 4. Rust toolchain
+```sh
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 source ~/.cargo/env
 rustup component add rust-analyzer rustfmt clippy
+cargo install eza
+```
 
-# 5. Doom Emacs
+### Step 4 — CLI tools (prompt, fuzzy find, markdown reader, etc.)
+
+```sh
+# starship — the prompt
+curl -sS https://starship.rs/install.sh | sh
+
+# grip — markdown live-preview inside Emacs
+pipx install grip
+pipx ensurepath   # adds ~/.local/bin to PATH
+
+# lazygit, glow, btop, fastfetch — grab latest binaries from GitHub releases:
+#   https://github.com/jesseduffield/lazygit/releases
+#   https://github.com/charmbracelet/glow/releases
+#   https://github.com/aristocratos/btop/releases
+#   https://github.com/fastfetch-cli/fastfetch/releases
+# Extract each binary to ~/.local/bin/
+```
+
+### Step 5 — JetBrains Mono Nerd Font
+
+Download `JetBrainsMono.zip` from https://github.com/ryanoasis/nerd-fonts/releases,
+unzip into `~/.local/share/fonts/`, then run:
+
+```sh
+fc-cache -f
+```
+
+Set your terminal (Windows Terminal or Ghostty) to use **JetBrainsMono Nerd Font**.
+
+### Step 6 — Doom Emacs + this config
+
+```sh
+# Doom itself
 git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.config/emacs
 
-# 6. This config
+# This config
 git clone https://github.com/westerngazoo/emacs-doom-config ~/.config/doom
 
-# 7. Symlink dotfiles + clone Ghostty shaders
+# Symlink dotfiles and create org/roam directory
 cd ~/.config/doom && ./install.sh
 
-# 8. Build
+# Install all packages
 ~/.config/emacs/bin/doom sync
 ```
 
@@ -133,16 +174,12 @@ Restart the shell, then run `emacs`.
 
 ### WSL notes
 
-- The `zshrc` guards macOS-only bits (`pmset`, `open -a`) behind an `$OSTYPE`
-  check, so the shared file works as-is on WSL.
+- `zshrc` guards macOS-only bits (`pmset`, `open -a`) with an `$OSTYPE` check —
+  the shared file works as-is on WSL.
 - Ghostty has a Linux build; the `macos-option-as-alt` line in `ghostty-config`
-  is simply ignored on Linux.
-- If `zsh` is not your shell yet: `sudo apt install zsh && chsh -s $(which zsh)`.
-- `~/.local/bin` must be on `PATH` for the `bat`/`fd` symlinks to resolve.
+  is silently ignored on Linux.
+- `~/.local/bin` must be on `PATH` — `pipx ensurepath` handles this.
 - **Aerospace** is macOS-only — `install.sh` skips it on Linux automatically.
-- **grip** (markdown preview): install with `pipx install grip` after adding pipx
-  (`sudo apt install pipx` or `pip install --user pipx`). Then run `doom sync` once
-  to install the `grip-mode` Emacs package.
 
 ---
 
