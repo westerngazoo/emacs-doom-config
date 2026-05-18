@@ -22,6 +22,16 @@ link "$DOT/ghostty-config" "$HOME/.config/ghostty/config"
 link "$DOT/starship.toml"  "$HOME/.config/starship.toml"
 link "$DOT/zshrc"          "$HOME/.zshrc"
 
+# macOS-only: Aerospace window manager
+if [[ "$(uname)" == "Darwin" ]]; then
+  link "$DOT/aerospace.toml"   "$HOME/.config/aerospace/aerospace.toml"
+  link "$DOT/restore-c32.sh"   "$HOME/.config/aerospace/restore-c32.sh"
+  chmod +x "$HOME/.config/aerospace/restore-c32.sh"
+fi
+
+# org-roam directory (needed to avoid errors on Emacs reload)
+mkdir -p "$HOME/org/roam"
+
 # Ghostty cursor shaders referenced by ghostty-config
 if [ ! -d "$HOME/.config/ghostty/shaders" ]; then
   git clone --depth 1 https://github.com/KroneCorylus/ghostty-shader-playground \

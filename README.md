@@ -121,6 +121,10 @@ Restart the shell, then run `emacs`.
   is simply ignored on Linux.
 - If `zsh` is not your shell yet: `sudo apt install zsh && chsh -s $(which zsh)`.
 - `~/.local/bin` must be on `PATH` for the `bat`/`fd` symlinks to resolve.
+- **Aerospace** is macOS-only — `install.sh` skips it on Linux automatically.
+- **grip** (markdown preview): install with `pipx install grip` after adding pipx
+  (`sudo apt install pipx` or `pip install --user pipx`). Then run `doom sync` once
+  to install the `grip-mode` Emacs package.
 
 ---
 
