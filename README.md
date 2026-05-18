@@ -106,7 +106,7 @@ terminal inside Emacs). `pandoc` powers the markdown split-preview.
 
 ```sh
 sudo apt install -y emacs build-essential cmake libtool-bin pandoc \
-                    fd-find ripgrep zoxide bat pipx
+                    fd-find ripgrep zoxide bat pipx tmux
 
 # Debian/Ubuntu ships bat as `batcat` and fd as `fdfind` — alias them:
 mkdir -p ~/.local/bin

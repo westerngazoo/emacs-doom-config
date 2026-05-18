@@ -21,6 +21,7 @@ link() {
 link "$DOT/ghostty-config" "$HOME/.config/ghostty/config"
 link "$DOT/starship.toml"  "$HOME/.config/starship.toml"
 link "$DOT/zshrc"          "$HOME/.zshrc"
+link "$DOT/tmux.conf"      "$HOME/.tmux.conf"
 
 # macOS-only: Aerospace window manager
 if [[ "$(uname)" == "Darwin" ]]; then
