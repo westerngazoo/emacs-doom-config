@@ -223,3 +223,32 @@
 (map! :localleader
       :map markdown-mode-map
       :desc "Grip preview" "p" #'grip-mode)
+
+;; ── Embedded / GDB ───────────────────────────────────────────────────────────
+(after! dap-mode
+  ;; J-Link GDB server runs on port 2331 by default
+  (dap-register-debug-template "J-Link ARM"
+    (list :type "gdb"
+          :request "launch"
+          :name "J-Link ARM"
+          :gdbpath "arm-none-eabi-gdb"
+          :target nil
+          :cwd nil
+          :stopAtEntry t
+          :runToMain t
+          :gdbserver-port 2331))
+
+  (dap-register-debug-template "J-Link RISC-V"
+    (list :type "gdb"
+          :request "launch"
+          :name "J-Link RISC-V"
+          :gdbpath "riscv64-unknown-elf-gdb"
+          :target nil
+          :cwd nil
+          :stopAtEntry t
+          :runToMain t
+          :gdbserver-port 2331)))
+
+;; GDB many-windows (TUI-style multi-pane layout)
+(map! :leader
+      :desc "GDB many windows" "og" #'gdb-many-windows)

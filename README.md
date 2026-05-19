@@ -69,6 +69,12 @@ brew install rustup-init && rustup-init -y
 source ~/.cargo/env
 rustup component add rust-analyzer rustfmt clippy
 
+# 4. Embedded toolchains (ARM + RISC-V, J-Link EDU)
+brew install --cask segger-jlink          # JLinkGDBServer
+brew install arm-none-eabi-gdb            # ARM GDB
+brew install riscv64-elf-gdb              # RISC-V GDB
+cargo install probe-rs-tools              # Rust-native alternative flasher
+
 # 4. Doom Emacs
 git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.config/emacs
 
@@ -134,6 +140,12 @@ curl -sS https://starship.rs/install.sh | sh
 # grip — markdown live-preview inside Emacs
 pipx install grip
 pipx ensurepath   # adds ~/.local/bin to PATH
+
+# Embedded toolchains (ARM + RISC-V, J-Link EDU)
+sudo apt install -y gcc-arm-none-eabi gdb-multiarch
+cargo install probe-rs-tools
+# Download J-Link Linux installer from https://www.segger.com/downloads/jlink/
+# and run: sudo dpkg -i JLink_Linux_*.deb
 
 # lazygit, glow, btop, fastfetch — grab latest binaries from GitHub releases:
 #   https://github.com/jesseduffield/lazygit/releases
