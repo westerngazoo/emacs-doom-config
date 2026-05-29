@@ -81,7 +81,31 @@
 
 (map! :leader
       :desc "File tree"    "e"  #'+treemacs/toggle
-      :desc "Claude Code"  "cc" (cmd! (vterm) (vterm-send-string "claude\n")))
+      :desc "Claude Code"  "cc" #'my/toggle-claude)
+
+(defun my/toggle-claude ()
+  "Toggle a persistent Claude Code vterm in the current project root."
+  (interactive)
+  (let* ((project-root (or (and (fboundp 'projectile-project-root)
+                                (projectile-project-root))
+                           default-directory))
+         (buf (get-buffer "*claude*")))
+    (cond
+     ((and buf (get-buffer-window buf))
+      (delete-window (get-buffer-window buf)))
+     (buf
+      (display-buffer buf '(display-buffer-below-selected)))
+     (t
+      (let ((default-directory project-root)
+            (dir project-root))
+        (vterm)
+        (rename-buffer "*claude*")
+        (run-with-timer 0.3 nil
+          (lambda ()
+            (when-let ((b (get-buffer "*claude*")))
+              (with-current-buffer b
+                (vterm-send-string
+                 (concat "cd " (shell-quote-argument dir) " && claude\n")))))))))))
 
 ;; ── Modeline ─────────────────────────────────────────────────────────────────
 (after! doom-modeline
@@ -226,28 +250,25 @@
 
 ;; ── Embedded / GDB ───────────────────────────────────────────────────────────
 (after! dap-mode
-  ;; J-Link GDB server runs on port 2331 by default
-  (dap-register-debug-template "J-Link ARM"
+  ;; GooseSteel STM32F413ZH via J-Link (attach — server started externally)
+  (dap-register-debug-template "GooseSteel · STM32F413ZH (J-Link)"
     (list :type "gdb"
-          :request "launch"
-          :name "J-Link ARM"
-          :gdbpath "arm-none-eabi-gdb"
-          :target nil
-          :cwd nil
-          :stopAtEntry t
-          :runToMain t
-          :gdbserver-port 2331))
+          :request "attach"
+          :name "GooseSteel · STM32F413ZH (J-Link)"
+          :gdbpath "/opt/homebrew/bin/arm-none-eabi-gdb"
+          :program (expand-file-name
+                    "build/stm32f413zh/GooseSteel-stm32f413zh-latest.elf"
+                    "~/projects/goose-steel/repo")
+          :target "localhost:2331"
+          :cwd (expand-file-name "~/projects/goose-steel/repo")))
 
+  ;; Generic J-Link RISC-V attach
   (dap-register-debug-template "J-Link RISC-V"
     (list :type "gdb"
-          :request "launch"
+          :request "attach"
           :name "J-Link RISC-V"
           :gdbpath "riscv64-unknown-elf-gdb"
-          :target nil
-          :cwd nil
-          :stopAtEntry t
-          :runToMain t
-          :gdbserver-port 2331)))
+          :target "localhost:2331")))
 
 ;; GDB many-windows (TUI-style multi-pane layout)
 (map! :leader
