@@ -33,3 +33,9 @@
 
 ;; Markdown preview via grip (renders like GitHub)
 (package! grip-mode)
+
+;; Offline docs inside Emacs (Rust, C, ARM, etc.)
+(package! devdocs)
+
+;; Jump to any directory instantly
+(package! consult-dir)

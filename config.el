@@ -273,3 +273,21 @@
 ;; GDB many-windows (TUI-style multi-pane layout)
 (map! :leader
       :desc "GDB many windows" "og" #'gdb-many-windows)
+
+;; ── evil-surround ─────────────────────────────────────────────────────────────
+(after! evil-surround
+  (global-evil-surround-mode 1))
+
+;; ── devdocs ───────────────────────────────────────────────────────────────────
+(after! devdocs
+  (map! :leader
+        :desc "DevDocs lookup" "sd" #'devdocs-lookup))
+
+;; ── git-timemachine ───────────────────────────────────────────────────────────
+(map! :leader
+      :desc "Git time machine" "gt" #'git-timemachine)
+
+;; ── consult-dir ───────────────────────────────────────────────────────────────
+(after! consult-dir
+  (map! :leader
+        :desc "Jump to dir" "fD" #'consult-dir))
