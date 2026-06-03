@@ -80,32 +80,125 @@
         treemacs-git-mode            'extended))
 
 (map! :leader
-      :desc "File tree"    "e"  #'+treemacs/toggle
-      :desc "Claude Code"  "cc" #'my/toggle-claude)
+      :desc "File tree"            "e"  #'+treemacs/toggle
+      :desc "Claude Code"          "cc" #'my/toggle-claude
+      :desc "Claude add file"      "cf" #'my/claude-add-current-file
+      :desc "Antigravity"          "ca" #'my/toggle-agy
+      :desc "Antigravity add file" "cg" #'my/agy-add-current-file)
 
 (defun my/toggle-claude ()
-  "Toggle a persistent Claude Code vterm in the current project root."
+  "Toggle a persistent Claude Code vterm on the left side window."
   (interactive)
   (let* ((project-root (or (and (fboundp 'projectile-project-root)
                                 (projectile-project-root))
                            default-directory))
-         (buf (get-buffer "*claude*")))
+         (file buffer-file-name)
+         (rel-path (when (and file (file-in-directory-p file project-root))
+                     (file-relative-name file project-root)))
+         (buf (get-buffer "*claude*"))
+         (is-new (not buf)))
     (cond
      ((and buf (get-buffer-window buf))
       (delete-window (get-buffer-window buf)))
-     (buf
-      (display-buffer buf '(display-buffer-below-selected)))
      (t
-      (let ((default-directory project-root)
-            (dir project-root))
-        (vterm)
-        (rename-buffer "*claude*")
-        (run-with-timer 0.3 nil
-          (lambda ()
-            (when-let ((b (get-buffer "*claude*")))
-              (with-current-buffer b
-                (vterm-send-string
-                 (concat "cd " (shell-quote-argument dir) " && claude\n")))))))))))
+      (when is-new
+        (setq buf (get-buffer-create "*claude*"))
+        (with-current-buffer buf
+          (setq default-directory project-root)
+          (vterm-mode)))
+      (let ((win (display-buffer buf '(display-buffer-in-side-window
+                                       (side . left)
+                                       (window-width . 80)))))
+        (select-window win))
+      (when is-new
+        (let ((root project-root))
+          (run-with-timer 0.3 nil
+            (lambda ()
+              (when-let ((b (get-buffer "*claude*")))
+                (with-current-buffer b
+                  (vterm-send-string (format "cd %s && claude\n" (shell-quote-argument root)))
+                  (when rel-path
+                    (run-with-timer 1.5 nil
+                      (lambda ()
+                        (when-let ((b2 (get-buffer "*claude*")))
+                          (with-current-buffer b2
+                            (vterm-send-string (format "@%s\n" rel-path)))))))))))))))))
+
+(defun my/toggle-agy ()
+  "Toggle a persistent Antigravity (agy) vterm on the left side window."
+  (interactive)
+  (let* ((project-root (or (and (fboundp 'projectile-project-root)
+                                (projectile-project-root))
+                           default-directory))
+         (file buffer-file-name)
+         (rel-path (when (and file (file-in-directory-p file project-root))
+                     (file-relative-name file project-root)))
+         (buf (get-buffer "*agy*"))
+         (is-new (not buf)))
+    (cond
+     ((and buf (get-buffer-window buf))
+      (delete-window (get-buffer-window buf)))
+     (t
+      (when is-new
+        (setq buf (get-buffer-create "*agy*"))
+        (with-current-buffer buf
+          (setq default-directory project-root)
+          (vterm-mode)))
+      (let ((win (display-buffer buf '(display-buffer-in-side-window
+                                       (side . left)
+                                       (window-width . 80)))))
+        (select-window win))
+      (when is-new
+        (let ((root project-root))
+          (run-with-timer 0.3 nil
+            (lambda ()
+              (when-let ((b (get-buffer "*agy*")))
+                (with-current-buffer b
+                  (vterm-send-string (format "cd %s && agy\n" (shell-quote-argument root)))
+                  (when rel-path
+                    (run-with-timer 1.5 nil
+                      (lambda ()
+                        (when-let ((b2 (get-buffer "*agy*")))
+                          (with-current-buffer b2
+                            (vterm-send-string (format "Please read %s\n" rel-path)))))))))))))))))
+
+(defun my/claude-add-current-file ()
+  "Send the current buffer's file path to the Claude Code vterm buffer."
+  (interactive)
+  (let* ((file buffer-file-name)
+         (project-root (or (and (fboundp 'projectile-project-root)
+                                (projectile-project-root))
+                           default-directory))
+         (buf (get-buffer "*claude*")))
+    (if (not file)
+        (message "No file in current buffer")
+      (if (not buf)
+          (message "Claude buffer (*claude*) not active")
+        (let* ((rel-path (file-relative-name file project-root))
+               (win (display-buffer buf '(display-buffer-in-side-window
+                                          (side . left)
+                                          (window-width . 80)))))
+          (select-window win)
+          (vterm-send-string (format "@%s\n" rel-path)))))))
+
+(defun my/agy-add-current-file ()
+  "Send the current buffer's file path to the Antigravity (agy) vterm buffer."
+  (interactive)
+  (let* ((file buffer-file-name)
+         (project-root (or (and (fboundp 'projectile-project-root)
+                                (projectile-project-root))
+                           default-directory))
+         (buf (get-buffer "*agy*")))
+    (if (not file)
+        (message "No file in current buffer")
+      (if (not buf)
+          (message "Antigravity buffer (*agy*) not active")
+        (let* ((rel-path (file-relative-name file project-root))
+               (win (display-buffer buf '(display-buffer-in-side-window
+                                          (side . left)
+                                          (window-width . 80)))))
+          (select-window win)
+          (vterm-send-string (format "Please read %s\n" rel-path)))))))
 
 ;; ── Modeline ─────────────────────────────────────────────────────────────────
 (after! doom-modeline

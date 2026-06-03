@@ -44,3 +44,7 @@ fi
 
 # Created by `pipx` on 2026-05-17 15:57:30
 export PATH="$PATH:/Users/goose/.local/bin"
+
+
+# Added by Antigravity CLI installer
+export PATH="/Users/goose/.local/bin:$PATH"
