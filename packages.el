@@ -37,5 +37,8 @@
 ;; Offline docs inside Emacs (Rust, C, ARM, etc.)
 (package! devdocs)
 
+;; Aider AI pair-programming inside Emacs
+(package! aidermacs :recipe (:host github :repo "MatthewZMD/aidermacs"))
+
 ;; Jump to any directory instantly
 (package! consult-dir)

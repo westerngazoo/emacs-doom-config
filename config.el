@@ -291,3 +291,12 @@
 (after! consult-dir
   (map! :leader
         :desc "Jump to dir" "fD" #'consult-dir))
+
+;; ── aidermacs ────────────────────────────────────────────────────────────────
+(after! aidermacs
+  (setq aidermacs-aider-command "/opt/homebrew/bin/aider")
+  (map! :leader
+        :desc "Aider open"         "aa" #'aidermacs-open
+        :desc "Aider add file"     "af" #'aidermacs-add-current-file
+        :desc "Aider send region"  "as" #'aidermacs-send-region
+        :desc "Aider ask"          "aq" #'aidermacs-ask))
