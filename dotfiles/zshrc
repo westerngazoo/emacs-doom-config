@@ -32,6 +32,8 @@ alias ff='fastfetch'         # system splash
 if [[ "$OSTYPE" == darwin* ]]; then
   alias ee='open -a Emacs'
   alias lock='pmset displaysleepnow'
+  # Auto-start Ollama if not running
+  pgrep -x ollama >/dev/null 2>&1 || (ollama serve >/dev/null 2>&1 &)
   zzz() {
     local secs=${1:-0}
     nohup sh -c "sleep $secs && pmset sleepnow" >/dev/null 2>&1 &

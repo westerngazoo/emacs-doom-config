@@ -294,9 +294,12 @@
 
 ;; ── aidermacs ────────────────────────────────────────────────────────────────
 (after! aidermacs
-  (setq aidermacs-aider-command "/opt/homebrew/bin/aider")
+  (setq aidermacs-aider-command "/opt/homebrew/bin/aider"
+        aidermacs-extra-args '("--model" "ollama/qwen3.5:9b"
+                               "--ollama-api-base" "http://localhost:11434"
+                               "--no-auto-commits"))
   (map! :leader
-        :desc "Aider open"         "aa" #'aidermacs-open
-        :desc "Aider add file"     "af" #'aidermacs-add-current-file
-        :desc "Aider send region"  "as" #'aidermacs-send-region
-        :desc "Aider ask"          "aq" #'aidermacs-ask))
+        :desc "Aider open"        "aa" #'aidermacs-open
+        :desc "Aider add file"    "af" #'aidermacs-add-current-file
+        :desc "Aider send region" "as" #'aidermacs-send-region
+        :desc "Aider ask"         "aq" #'aidermacs-ask))
