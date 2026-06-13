@@ -298,10 +298,16 @@
 (use-package! copilot
   :hook (prog-mode . copilot-mode)
   :bind (:map copilot-completion-map
-              ("<tab>" . copilot-accept-completion)
-              ("TAB" . copilot-accept-completion)
-              ("C-TAB" . copilot-accept-completion-by-word)
-              ("C-<tab>" . copilot-accept-completion-by-word))
+              ;; accept
+              ("<tab>"    . copilot-accept-completion)
+              ("TAB"      . copilot-accept-completion)
+              ("C-TAB"    . copilot-accept-completion-by-word)
+              ("C-<tab>"  . copilot-accept-completion-by-word)
+              ;; cycle through suggestions
+              ("M-n"      . copilot-next-completion)
+              ("M-p"      . copilot-previous-completion)
+              ;; dismiss
+              ("C-g"      . copilot-clear-overlay))
   :init
   ;; Doom sets user-emacs-directory to .local/cache/, which makes the default
   ;; copilot-install-dir resolve to a non-existent .cache/.cache/copilot path.
@@ -311,4 +317,15 @@
   (setq copilot-enable-predicates '(evil-insert-state-p))
   (setq copilot-indent-offset-warning-disable t)
   (setq copilot-completion-model "gpt-5.3-codex"))
+
+;; ── Copilot management bindings ──────────────────────────────────────────────
+(map! :leader
+      :desc "Toggle Copilot" "tc" #'copilot-mode
+      (:prefix ("ac" . "copilot")
+       :desc "Trigger completion"  "c" #'copilot-complete
+       :desc "Login"               "l" #'copilot-login
+       :desc "Logout"              "o" #'copilot-logout
+       :desc "Diagnose"            "d" #'copilot-diagnose
+       :desc "Select model"        "m" #'copilot-select-completion-model
+       :desc "Panel complete"      "p" #'copilot-panel-complete))
 
