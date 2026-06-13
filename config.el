@@ -283,12 +283,7 @@
                '("\\*aider.*"
                  (display-buffer-in-side-window)
                  (side . left)
-                 (window-width . 80)))
-  (map! :leader
-        :desc "Aider open"        "aa" #'aidermacs-open
-        :desc "Aider add file"    "af" #'aidermacs-add-current-file
-        :desc "Aider send region" "as" #'aidermacs-send-region
-        :desc "Aider ask"         "aq" #'aidermacs-ask))
+                 (window-width . 80))))
 
 ;; ── GitHub Copilot ───────────────────────────────────────────────────────────
 ;; Register autoloads so M-x copilot-login works before a code file is opened
@@ -318,14 +313,20 @@
   (setq copilot-indent-offset-warning-disable t)
   (setq copilot-completion-model "gpt-5.3-codex"))
 
-;; ── Copilot management bindings ──────────────────────────────────────────────
+;; ── AI tools (aider + copilot) under one SPC a prefix ────────────────────────
 (map! :leader
-      :desc "Toggle Copilot" "tc" #'copilot-mode
-      (:prefix ("ac" . "copilot")
-       :desc "Trigger completion"  "c" #'copilot-complete
-       :desc "Login"               "l" #'copilot-login
-       :desc "Logout"              "o" #'copilot-logout
-       :desc "Diagnose"            "d" #'copilot-diagnose
-       :desc "Select model"        "m" #'copilot-select-completion-model
-       :desc "Panel complete"      "p" #'copilot-panel-complete))
+      (:prefix ("a" . "ai")
+       :desc "Aider open"          "a" #'aidermacs-open
+       :desc "Aider add file"      "f" #'aidermacs-add-current-file
+       :desc "Aider send region"   "s" #'aidermacs-send-region
+       :desc "Aider ask"           "q" #'aidermacs-ask
+       (:prefix ("c" . "copilot")
+        :desc "Trigger completion" "c" #'copilot-complete
+        :desc "Login"              "l" #'copilot-login
+        :desc "Logout"             "o" #'copilot-logout
+        :desc "Diagnose"           "d" #'copilot-diagnose
+        :desc "Select model"       "m" #'copilot-select-completion-model
+        :desc "Panel complete"     "p" #'copilot-panel-complete)))
+
+(map! :leader :desc "Toggle Copilot" "tc" #'copilot-mode)
 
