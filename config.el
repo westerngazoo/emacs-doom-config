@@ -311,7 +311,9 @@
   :config
   (setq copilot-enable-predicates '(evil-insert-state-p))
   (setq copilot-indent-offset-warning-disable t)
-  (setq copilot-completion-model "gpt-5.3-codex"))
+  (setq copilot-completion-model "gpt-5.3-codex")
+  ;; Chat needs an explicit model id (server rejects nil); Sonnet 4.6 is best for explaining code
+  (setq copilot-chat-model "claude-sonnet-4.6"))
 
 ;; ── AI tools (aider + copilot) under one SPC a prefix ────────────────────────
 (map! :leader
@@ -325,8 +327,13 @@
         :desc "Login"              "l" #'copilot-login
         :desc "Logout"             "o" #'copilot-logout
         :desc "Diagnose"           "d" #'copilot-diagnose
-        :desc "Select model"       "m" #'copilot-select-completion-model
-        :desc "Panel complete"     "p" #'copilot-panel-complete)))
+        :desc "Select cmpl model"  "m" #'copilot-select-completion-model
+        :desc "Panel complete"     "p" #'copilot-panel-complete
+        ;; chat
+        :desc "Chat send"          "t" #'copilot-chat-send
+        :desc "Chat send region"   "r" #'copilot-chat-send-region
+        :desc "Chat reset"         "x" #'copilot-chat-reset
+        :desc "Chat model"         "M" #'copilot-chat-select-model)))
 
 (map! :leader :desc "Toggle Copilot" "tc" #'copilot-mode)
 
