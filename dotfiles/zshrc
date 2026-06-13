@@ -6,9 +6,6 @@ alias codefire='emacs -nw'
 # ── Prompt ──────────────────────────────────────────────────────────────────
 eval "$(starship init zsh)"
 
-# ── Smart cd ────────────────────────────────────────────────────────────────
-eval "$(zoxide init zsh --cmd cd)"
-
 # ── ls → eza (Nerd Font icons + git status) ─────────────────────────────────
 alias ls='eza --icons --group-directories-first'
 alias ll='eza -l --icons --git --group-directories-first'
@@ -51,3 +48,6 @@ export PATH="/Users/goose/.local/bin:$PATH"
 
 # Added by Antigravity IDE
 export PATH="/Users/goose/.antigravity-ide/antigravity-ide/bin:$PATH"
+
+# ── Smart cd (zoxide must init LAST so its cd hook isn't overridden) ──────────
+eval "$(zoxide init zsh --cmd cd)"
