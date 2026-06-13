@@ -42,3 +42,6 @@
 
 ;; Jump to any directory instantly
 (package! consult-dir)
+
+;; GitHub Copilot autocomplete
+(package! copilot :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el" "dist")))

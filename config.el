@@ -10,6 +10,12 @@
 (defvar my/wslp   (and my/linuxp
                        (file-exists-p "/proc/sys/fs/binfmt_misc/WSLInterop")))
 
+(when my/macp
+  (setenv "PATH" (concat "/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:" (getenv "PATH")))
+  (add-to-list 'exec-path "/opt/homebrew/bin")
+  (add-to-list 'exec-path "/opt/homebrew/sbin")
+  (add-to-list 'exec-path "/usr/local/bin"))
+
 ;; ── Font ────────────────────────────────────────────────────────────────────
 (setq doom-font (font-spec
                  :family (if my/macp "JetBrainsMono Nerd Font"
@@ -80,125 +86,7 @@
         treemacs-git-mode            'extended))
 
 (map! :leader
-      :desc "File tree"            "e"  #'+treemacs/toggle
-      :desc "Claude Code"          "cc" #'my/toggle-claude
-      :desc "Claude add file"      "cf" #'my/claude-add-current-file
-      :desc "Antigravity"          "ca" #'my/toggle-agy
-      :desc "Antigravity add file" "cg" #'my/agy-add-current-file)
-
-(defun my/toggle-claude ()
-  "Toggle a persistent Claude Code vterm on the left side window."
-  (interactive)
-  (let* ((project-root (or (and (fboundp 'projectile-project-root)
-                                (projectile-project-root))
-                           default-directory))
-         (file buffer-file-name)
-         (rel-path (when (and file (file-in-directory-p file project-root))
-                     (file-relative-name file project-root)))
-         (buf (get-buffer "*claude*"))
-         (is-new (not buf)))
-    (cond
-     ((and buf (get-buffer-window buf))
-      (delete-window (get-buffer-window buf)))
-     (t
-      (when is-new
-        (setq buf (get-buffer-create "*claude*"))
-        (with-current-buffer buf
-          (setq default-directory project-root)
-          (vterm-mode)))
-      (let ((win (display-buffer buf '(display-buffer-in-side-window
-                                       (side . left)
-                                       (window-width . 80)))))
-        (select-window win))
-      (when is-new
-        (let ((root project-root))
-          (run-with-timer 0.3 nil
-            (lambda ()
-              (when-let ((b (get-buffer "*claude*")))
-                (with-current-buffer b
-                  (vterm-send-string (format "cd %s && claude\n" (shell-quote-argument root)))
-                  (when rel-path
-                    (run-with-timer 1.5 nil
-                      (lambda ()
-                        (when-let ((b2 (get-buffer "*claude*")))
-                          (with-current-buffer b2
-                            (vterm-send-string (format "@%s\n" rel-path)))))))))))))))))
-
-(defun my/toggle-agy ()
-  "Toggle a persistent Antigravity (agy) vterm on the left side window."
-  (interactive)
-  (let* ((project-root (or (and (fboundp 'projectile-project-root)
-                                (projectile-project-root))
-                           default-directory))
-         (file buffer-file-name)
-         (rel-path (when (and file (file-in-directory-p file project-root))
-                     (file-relative-name file project-root)))
-         (buf (get-buffer "*agy*"))
-         (is-new (not buf)))
-    (cond
-     ((and buf (get-buffer-window buf))
-      (delete-window (get-buffer-window buf)))
-     (t
-      (when is-new
-        (setq buf (get-buffer-create "*agy*"))
-        (with-current-buffer buf
-          (setq default-directory project-root)
-          (vterm-mode)))
-      (let ((win (display-buffer buf '(display-buffer-in-side-window
-                                       (side . left)
-                                       (window-width . 80)))))
-        (select-window win))
-      (when is-new
-        (let ((root project-root))
-          (run-with-timer 0.3 nil
-            (lambda ()
-              (when-let ((b (get-buffer "*agy*")))
-                (with-current-buffer b
-                  (vterm-send-string (format "cd %s && agy\n" (shell-quote-argument root)))
-                  (when rel-path
-                    (run-with-timer 1.5 nil
-                      (lambda ()
-                        (when-let ((b2 (get-buffer "*agy*")))
-                          (with-current-buffer b2
-                            (vterm-send-string (format "Please read %s\n" rel-path)))))))))))))))))
-
-(defun my/claude-add-current-file ()
-  "Send the current buffer's file path to the Claude Code vterm buffer."
-  (interactive)
-  (let* ((file buffer-file-name)
-         (project-root (or (and (fboundp 'projectile-project-root)
-                                (projectile-project-root))
-                           default-directory))
-         (buf (get-buffer "*claude*")))
-    (if (not file)
-        (message "No file in current buffer")
-      (if (not buf)
-          (message "Claude buffer (*claude*) not active")
-        (let* ((rel-path (file-relative-name file project-root))
-               (win (display-buffer buf '(display-buffer-in-side-window
-                                          (side . left)
-                                          (window-width . 80)))))
-          (select-window win)
-          (vterm-send-string (format "@%s\n" rel-path)))))))
-
-(defun my/agy-add-current-file ()
-  "Send the current buffer's file path to the Antigravity (agy) vterm buffer."
-  (interactive)
-  (let* ((file buffer-file-name)
-         (project-root (or (and (fboundp 'projectile-project-root)
-                                (projectile-project-root))
-                           default-directory))
-         (buf (get-buffer "*agy*")))
-    (if (not file)
-        (message "No file in current buffer")
-      (if (not buf)
-          (message "Antigravity buffer (*agy*) not active")
-        (let* ((rel-path (file-relative-name file project-root))
-               (win (display-buffer buf '(display-buffer-in-side-window
-                                          (side . left)
-                                          (window-width . 80)))))
-          (select-window win)
-          (vterm-send-string (format "Please read %s\n" rel-path)))))))
+      :desc "File tree"            "e"  #'+treemacs/toggle)
 
 ;; ── Modeline ─────────────────────────────────────────────────────────────────
 (after! doom-modeline
@@ -391,8 +279,36 @@
         aidermacs-extra-args '("--model" "ollama/qwen3.5:9b"
                                "--ollama-api-base" "http://localhost:11434"
                                "--no-auto-commits"))
+  (add-to-list 'display-buffer-alist
+               '("\\*aider.*"
+                 (display-buffer-in-side-window)
+                 (side . left)
+                 (window-width . 80)))
   (map! :leader
         :desc "Aider open"        "aa" #'aidermacs-open
         :desc "Aider add file"    "af" #'aidermacs-add-current-file
         :desc "Aider send region" "as" #'aidermacs-send-region
         :desc "Aider ask"         "aq" #'aidermacs-ask))
+
+;; ── GitHub Copilot ───────────────────────────────────────────────────────────
+;; Register autoloads so M-x copilot-login works before a code file is opened
+(autoload 'copilot-login "copilot" "Login to Copilot." t)
+(autoload 'copilot-diagnose "copilot" "Diagnose Copilot." t)
+
+(use-package! copilot
+  :hook (prog-mode . copilot-mode)
+  :bind (:map copilot-completion-map
+              ("<tab>" . copilot-accept-completion)
+              ("TAB" . copilot-accept-completion)
+              ("C-TAB" . copilot-accept-completion-by-word)
+              ("C-<tab>" . copilot-accept-completion-by-word))
+  :init
+  ;; Doom sets user-emacs-directory to .local/cache/, which makes the default
+  ;; copilot-install-dir resolve to a non-existent .cache/.cache/copilot path.
+  ;; Setting it here in :init ensures it's bound before the defcustom runs.
+  (setq copilot-install-dir (expand-file-name "copilot" doom-cache-dir))
+  :config
+  (setq copilot-enable-predicates '(evil-insert-state-p))
+  (setq copilot-indent-offset-warning-disable t)
+  (setq copilot-completion-model "gpt-5.3-codex"))
+
