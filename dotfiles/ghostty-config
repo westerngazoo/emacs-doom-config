@@ -8,29 +8,32 @@ window-padding-x = 12
 window-padding-y = 8
 background-opacity = 1.0
 
-background = faf9f5
-foreground = 1a1a1a
-cursor-color = 3a7dd8
-cursor-text = faf9f5
-selection-background = dde6f3
-selection-foreground = 1a1a1a
+# ── Solarized Light ──────────────────────────────────────────────────────────
+background = fdf6e3
+foreground = 657b83
+cursor-color = 00aa2e
+cursor-text = 002b00
+selection-background = eee8d5
+selection-foreground = 586e75
 
-palette = 0=#1a1a1a
-palette = 1=#c92a2a
-palette = 2=#1a8c3e
-palette = 3=#a86b00
-palette = 4=#1f6feb
-palette = 5=#bd4d8a
-palette = 6=#0e8f8f
-palette = 7=#d6d3c8
-palette = 8=#9a978c
-palette = 9=#e0483f
-palette = 10=#24a148
-palette = 11=#c4870a
-palette = 12=#3a7dd8
-palette = 13=#d067a0
-palette = 14=#13a3a3
-palette = 15=#faf9f5
+# normal
+palette = 0=#073642
+palette = 1=#dc322f
+palette = 2=#859900
+palette = 3=#b58900
+palette = 4=#268bd2
+palette = 5=#d33682
+palette = 6=#2aa198
+palette = 7=#eee8d5
+# bright
+palette = 8=#002b36
+palette = 9=#cb4b16
+palette = 10=#586e75
+palette = 11=#657b83
+palette = 12=#839496
+palette = 13=#6c71c4
+palette = 14=#93a1a1
+palette = 15=#fdf6e3
 
 custom-shader = ~/.config/ghostty/shaders/public/shaders/cursor_smear.glsl
 custom-shader-animation = true

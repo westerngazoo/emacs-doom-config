@@ -24,49 +24,20 @@
       doom-variable-pitch-font (font-spec :family "JetBrainsMono Nerd Font" :size 13)
       doom-big-font (font-spec :family "JetBrainsMono Nerd Font" :size 20))
 
-;; ── Theme — warm paper light, IBM-ish blues ─────────────────────────────────
-(setq doom-theme 'doom-one-light)
-
-(add-hook! 'doom-load-theme-hook
-  (custom-set-faces!
-    '(default                  :background "#faf9f5" :foreground "#1a1a1a")
-    '(fringe                   :background "#faf9f5")
-    '(hl-line                  :background "#f0eee6")
-    '(region                   :background "#dde6f3")
-    '(cursor                   :background "#3a7dd8")
-    '(vertical-border          :foreground "#e3e0d6")
-    '(line-number              :background "#faf9f5" :foreground "#9dbfe8")
-    '(line-number-current-line :background "#faf9f5" :foreground "#1f6feb" :weight bold)
-    '(font-lock-keyword-face       :foreground "#1f6feb" :weight bold)
-    '(font-lock-function-name-face :foreground "#3a7dd8" :weight bold)
-    '(font-lock-type-face          :foreground "#0e8f8f")
-    '(font-lock-variable-name-face :foreground "#1a1a1a" :weight normal)
-    '(font-lock-string-face        :foreground "#c92a2a")
-    '(font-lock-comment-face       :foreground "#1a1a1a" :weight normal :slant normal)
-    '(font-lock-doc-face           :foreground "#1a1a1a" :weight normal :slant normal)
-    '(font-lock-constant-face      :foreground "#bd4d8a")
-    '(font-lock-builtin-face       :foreground "#3a7dd8")
-    '(mode-line                :background "#efece2" :foreground "#1a1a1a")
-    '(mode-line-inactive       :background "#f4f2ea" :foreground "#9a978c")
-    ;; eww / markdown-live-preview
-    '(shr-text                 :foreground "#1a1a1a" :background "#faf9f5")
-    '(shr-h1                   :foreground "#1a1a1a" :weight bold :height 1.4)
-    '(shr-h2                   :foreground "#1a1a1a" :weight bold :height 1.2)
-    '(shr-h3                   :foreground "#1a1a1a" :weight bold :height 1.1)
-    '(shr-link                 :foreground "#1f6feb" :underline t)
-    '(shr-code                 :foreground "#c92a2a" :background "#f0eee6")
-    '(eww-form-text            :background "#f0eee6")
-    '(markdown-header-face-1   :foreground "#1a1a1a" :weight bold :height 1.4)
-    '(markdown-header-face-2   :foreground "#1a1a1a" :weight bold :height 1.2)
-    '(markdown-header-face-3   :foreground "#3a7dd8" :weight bold :height 1.1)
-    '(markdown-bold-face       :foreground "#1a1a1a" :weight bold)
-    '(markdown-code-face       :background "#f0eee6")
-    '(markdown-link-face       :foreground "#1f6feb")
-    '(markdown-url-face        :foreground "#9a978c" :underline t)))
+;; ── Theme ────────────────────────────────────────────────────────────────────
+(setq doom-theme 'doom-solarized-light)
 
 ;; ── Line numbers ─────────────────────────────────────────────────────────────
 (setq display-line-numbers-type 'relative)
 (global-display-line-numbers-mode 1)
+
+;; ── vterm — right side panel ─────────────────────────────────────────────────
+(after! vterm
+  (setq vterm-shell (or (executable-find "zsh") shell-file-name)))
+
+;; Override Doom's bottom popup after all modules load
+(add-hook! 'doom-after-init-hook
+  (set-popup-rule! "^\\*vterm" :side 'right :width 0.38 :select t :quit nil :ttl 0))
 
 ;; ── Editor feel ──────────────────────────────────────────────────────────────
 (setq-default
@@ -159,10 +130,7 @@
 (after! highlight-indent-guides
   (setq highlight-indent-guides-method 'character
         highlight-indent-guides-character ?\│
-        highlight-indent-guides-responsive 'top)
-  (custom-set-faces!
-    '(highlight-indent-guides-character-face     :foreground "#e3e0d6")
-    '(highlight-indent-guides-top-character-face :foreground "#b8b5a9")))
+        highlight-indent-guides-responsive 'top))
 
 ;; ── Embark — contextual actions ───────────────────────────────────────────────
 (after! embark
@@ -187,29 +155,6 @@
 ;; ── Org ───────────────────────────────────────────────────────────────────────
 (setq org-directory "~/org/")
 
-;; ── Tree-sitter faces (Rust, C++) ────────────────────────────────────────────
-(add-hook! 'doom-load-theme-hook
-  (custom-set-faces!
-    '(tree-sitter-hl-face:keyword          :foreground "#1f6feb" :weight bold)
-    '(tree-sitter-hl-face:function         :foreground "#3a7dd8" :weight bold)
-    '(tree-sitter-hl-face:function.call    :foreground "#3a7dd8")
-    '(tree-sitter-hl-face:function.macro   :foreground "#3a7dd8" :weight bold)
-    '(tree-sitter-hl-face:method           :foreground "#3a7dd8" :weight bold)
-    '(tree-sitter-hl-face:method.call      :foreground "#3a7dd8")
-    '(tree-sitter-hl-face:type             :foreground "#0e8f8f")
-    '(tree-sitter-hl-face:type.builtin     :foreground "#0e8f8f")
-    '(tree-sitter-hl-face:string           :foreground "#c92a2a")
-    '(tree-sitter-hl-face:string.special   :foreground "#c92a2a")
-    '(tree-sitter-hl-face:comment          :foreground "#1a1a1a" :weight normal :slant normal)
-    '(tree-sitter-hl-face:doc              :foreground "#1a1a1a" :weight normal :slant normal)
-    '(tree-sitter-hl-face:constant         :foreground "#bd4d8a")
-    '(tree-sitter-hl-face:constant.builtin :foreground "#bd4d8a")
-    '(tree-sitter-hl-face:variable         :foreground "#1a1a1a" :weight normal)
-    '(tree-sitter-hl-face:variable.builtin :foreground "#1a1a1a")
-    '(tree-sitter-hl-face:property         :foreground "#1a1a1a")
-    '(tree-sitter-hl-face:operator         :foreground "#6b6b6b")
-    '(tree-sitter-hl-face:punctuation      :foreground "#6b6b6b")
-    '(tree-sitter-hl-face:number           :foreground "#bd4d8a")))
 
 ;; ── Keybindings ──────────────────────────────────────────────────────────────
 (map! :leader
@@ -315,13 +260,29 @@
   ;; Chat needs an explicit model id (server rejects nil); Sonnet 4.6 is best for explaining code
   (setq copilot-chat-model "claude-sonnet-4.6"))
 
+;; No line numbers in Copilot chat buffer
+(add-hook 'copilot-chat-mode-hook (lambda () (display-line-numbers-mode -1)))
+
+;; copilot--workspace-root runs inside the *Copilot Chat* buffer which has no
+;; project association. Fall back to the source buffer's root so Copilot chat
+;; knows which workspace is open.
+(after! copilot
+  (defadvice! my/copilot--workspace-root-via-source (orig-result)
+    :filter-return #'copilot--workspace-root
+    (or orig-result
+        (when-let* ((src (and (boundp 'copilot-chat--source-buffer)
+                              copilot-chat--source-buffer))
+                    ((buffer-live-p src)))
+          (with-current-buffer src
+            (copilot--workspace-root))))))
+
 ;; ── AI tools (aider + copilot) under one SPC a prefix ────────────────────────
 (map! :leader
-      (:prefix ("a" . "ai")
-       :desc "Aider open"          "a" #'aidermacs-open
+      (:prefix ("A" . "ai")
+       :desc "Aider run"            "a" #'aidermacs-run
        :desc "Aider add file"      "f" #'aidermacs-add-current-file
-       :desc "Aider send region"   "s" #'aidermacs-send-region
-       :desc "Aider ask"           "q" #'aidermacs-ask
+       :desc "Aider send region"   "s" #'aidermacs-send-block-or-region
+       :desc "Aider reset"         "q" #'aidermacs-reset
        (:prefix ("c" . "copilot")
         :desc "Trigger completion" "c" #'copilot-complete
         :desc "Login"              "l" #'copilot-login
@@ -329,7 +290,6 @@
         :desc "Diagnose"           "d" #'copilot-diagnose
         :desc "Select cmpl model"  "m" #'copilot-select-completion-model
         :desc "Panel complete"     "p" #'copilot-panel-complete
-        ;; chat
         :desc "Chat send"          "t" #'copilot-chat-send
         :desc "Chat send region"   "r" #'copilot-chat-send-region
         :desc "Chat reset"         "x" #'copilot-chat-reset
