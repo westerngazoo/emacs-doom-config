@@ -25,7 +25,7 @@
       doom-big-font (font-spec :family "JetBrainsMono Nerd Font" :size 20))
 
 ;; ── Theme ────────────────────────────────────────────────────────────────────
-(setq doom-theme 'doom-solarized-light)
+(setq doom-theme 'doom-gruvbox-light)
 
 ;; ── Line numbers ─────────────────────────────────────────────────────────────
 (setq display-line-numbers-type 'relative)
