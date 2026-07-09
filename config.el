@@ -25,7 +25,7 @@
       doom-big-font (font-spec :family "JetBrainsMono Nerd Font" :size 20))
 
 ;; ── Theme ────────────────────────────────────────────────────────────────────
-(setq doom-theme 'doom-gruvbox-light)
+(setq doom-theme 'doom-acario-dark)
 
 ;; ── Line numbers ─────────────────────────────────────────────────────────────
 (setq display-line-numbers-type 'relative)
@@ -234,6 +234,9 @@
 ;; Register autoloads so M-x copilot-login works before a code file is opened
 (autoload 'copilot-login "copilot" "Login to Copilot." t)
 (autoload 'copilot-diagnose "copilot" "Diagnose Copilot." t)
+(autoload 'copilot-panel-complete "copilot" "Open Copilot Panel." t)
+(autoload 'copilot-chat "copilot-chat" "Open Copilot Chat." t)
+(autoload 'copilot-chat-send-region "copilot-chat" "Send region to Copilot Chat." t)
 
 (use-package! copilot
   :hook (prog-mode . copilot-mode)
@@ -274,12 +277,86 @@
                               copilot-chat--source-buffer))
                     ((buffer-live-p src)))
           (with-current-buffer src
-            (copilot--workspace-root))))))
+            (copilot--workspace-root)))))
+            
+  (defun copilot-chat-display ()
+    "Display the Copilot Chat buffer."
+    (interactive)
+    (let ((chat-buf (get-buffer-create copilot-chat--buffer-name)))
+      (unless (buffer-live-p chat-buf)
+        (user-error "Copilot Chat is not active"))
+      (with-current-buffer chat-buf
+        (unless (derived-mode-p 'copilot-chat-mode)
+          (copilot-chat-mode)))
+      (display-buffer chat-buf))))
 
-;; ── AI tools (aider + copilot) under one SPC a prefix ────────────────────────
+;; ── Claude CLI + AGI CLI right-side panels ───────────────────────────────────
+(defun my/cli-panel-toggle (buf-name command)
+  "Toggle a right-side vterm panel running COMMAND."
+  (let* ((root (or (and (fboundp 'projectile-project-root) (projectile-project-root))
+                   default-directory))
+         (buf  (get-buffer buf-name))
+         (win  (and buf (get-buffer-window buf))))
+    (cond
+     (win (delete-window win))
+     (buf (display-buffer buf
+                          '((display-buffer-in-side-window)
+                            (side . right) (window-width . 0.40))))
+     (t
+      (let* ((src-win (selected-window))
+             (src-buf (current-buffer))
+             (new-buf (get-buffer-create buf-name)))
+        (with-current-buffer new-buf
+          (let ((default-directory root))
+            (vterm-mode)))
+        (display-buffer new-buf
+                        '((display-buffer-in-side-window)
+                          (side . right) (window-width . 0.40)))
+        (set-window-buffer src-win src-buf)
+        (with-current-buffer new-buf
+          (vterm-send-string (concat command "\n"))))))))
+
+
+(defun my/toggle-claude ()
+  "Toggle Claude Code CLI panel."
+  (interactive)
+  (my/cli-panel-toggle "*claude-cli*" "claude"))
+
+(defun my/claude-add-file ()
+  "Send current file to the Claude CLI panel as context."
+  (interactive)
+  (when-let* ((file (buffer-file-name))
+              (root (or (and (fboundp 'projectile-project-root) (projectile-project-root))
+                        default-directory))
+              (rel  (file-relative-name file root))
+              (buf  (get-buffer "*claude-cli*")))
+    (with-current-buffer buf
+      (vterm-send-string (format "@%s\n" rel)))))
+
+(defun my/toggle-agy ()
+  "Toggle Antigravity CLI panel."
+  (interactive)
+  (my/cli-panel-toggle "*agy-cli*" "agy"))
+
+(defun my/agy-add-file ()
+  "Send current file to the AGI CLI panel as context."
+  (interactive)
+  (when-let* ((file (buffer-file-name))
+              (root (or (and (fboundp 'projectile-project-root) (projectile-project-root))
+                        default-directory))
+              (rel  (file-relative-name file root))
+              (buf  (get-buffer "*agy-cli*")))
+    (with-current-buffer buf
+      (vterm-send-string (format "/add %s\n" rel)))))
+
+;; ── AI tools (aider + copilot) under one SPC A prefix ────────────────────────
 (map! :leader
       (:prefix ("A" . "ai")
-       :desc "Aider run"            "a" #'aidermacs-run
+       :desc "Claude CLI panel"    "C" #'my/toggle-claude
+       :desc "Claude add file"     "F" #'my/claude-add-file
+       :desc "AGI CLI panel"       "G" #'my/toggle-agy
+       :desc "AGI add file"        "H" #'my/agy-add-file
+       :desc "Aider run"           "a" #'aidermacs-run
        :desc "Aider add file"      "f" #'aidermacs-add-current-file
        :desc "Aider send region"   "s" #'aidermacs-send-block-or-region
        :desc "Aider reset"         "q" #'aidermacs-reset
@@ -290,7 +367,7 @@
         :desc "Diagnose"           "d" #'copilot-diagnose
         :desc "Select cmpl model"  "m" #'copilot-select-completion-model
         :desc "Panel complete"     "p" #'copilot-panel-complete
-        :desc "Chat send"          "t" #'copilot-chat-send
+        :desc "Chat"               "t" #'copilot-chat
         :desc "Chat send region"   "r" #'copilot-chat-send-region
         :desc "Chat reset"         "x" #'copilot-chat-reset
         :desc "Chat model"         "M" #'copilot-chat-select-model)))
