@@ -317,10 +317,24 @@
           (vterm-send-string (concat command "\n"))))))))
 
 
+(defun my/cli-send-file (buf-name prefix file root delay)
+  "After DELAY seconds, send PREFIX + relative FILE path to BUF-NAME."
+  (run-with-timer delay nil
+    (lambda ()
+      (when-let ((buf (get-buffer buf-name)))
+        (with-current-buffer buf
+          (vterm-send-string (format "%s%s\n" prefix (file-relative-name file root))))))))
+
 (defun my/toggle-claude ()
-  "Toggle Claude Code CLI panel."
+  "Toggle Claude Code CLI panel, auto-sending current file on first open."
   (interactive)
-  (my/cli-panel-toggle "*claude-cli*" "claude"))
+  (let* ((file (buffer-file-name))
+         (root (or (and (fboundp 'projectile-project-root) (projectile-project-root))
+                   default-directory))
+         (fresh (not (get-buffer "*claude-cli*"))))
+    (my/cli-panel-toggle "*claude-cli*" "claude")
+    (when (and fresh file)
+      (my/cli-send-file "*claude-cli*" "@" file root 2.5))))
 
 (defun my/claude-add-file ()
   "Send current file to the Claude CLI panel as context."
@@ -328,15 +342,20 @@
   (when-let* ((file (buffer-file-name))
               (root (or (and (fboundp 'projectile-project-root) (projectile-project-root))
                         default-directory))
-              (rel  (file-relative-name file root))
               (buf  (get-buffer "*claude-cli*")))
     (with-current-buffer buf
-      (vterm-send-string (format "@%s\n" rel)))))
+      (vterm-send-string (format "@%s\n" (file-relative-name file root))))))
 
 (defun my/toggle-agy ()
-  "Toggle Antigravity CLI panel."
+  "Toggle Antigravity CLI panel, auto-sending current file on first open."
   (interactive)
-  (my/cli-panel-toggle "*agy-cli*" "agy"))
+  (let* ((file (buffer-file-name))
+         (root (or (and (fboundp 'projectile-project-root) (projectile-project-root))
+                   default-directory))
+         (fresh (not (get-buffer "*agy-cli*"))))
+    (my/cli-panel-toggle "*agy-cli*" "agy")
+    (when (and fresh file)
+      (my/cli-send-file "*agy-cli*" "/add " file root 2.5))))
 
 (defun my/agy-add-file ()
   "Send current file to the AGI CLI panel as context."
@@ -344,10 +363,9 @@
   (when-let* ((file (buffer-file-name))
               (root (or (and (fboundp 'projectile-project-root) (projectile-project-root))
                         default-directory))
-              (rel  (file-relative-name file root))
               (buf  (get-buffer "*agy-cli*")))
     (with-current-buffer buf
-      (vterm-send-string (format "/add %s\n" rel)))))
+      (vterm-send-string (format "/add %s\n" (file-relative-name file root))))))
 
 ;; ── AI tools (aider + copilot) under one SPC A prefix ────────────────────────
 (map! :leader
